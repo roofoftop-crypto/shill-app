@@ -6,9 +6,8 @@ from pathlib import Path
 from pyairtable import Table
 from telethon.sync import TelegramClient
 from telethon.sessions import StringSession
-
 from services.configuracion_shill import obtener_configuracion_shill
-from services.telegram_manager import cargar_cuentas_activas
+
 
 # Variables del entorno (Render las inyecta automáticamente)
 API_ID = int(os.environ.get("TELEGRAM_API_ID"))
