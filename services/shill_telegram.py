@@ -5,9 +5,10 @@ import asyncio
 from telethon import TelegramClient
 from telethon.sessions import StringSession
 
-# 📌 Reemplazá con tus datos reales
-API_ID = 25522298
-API_HASH = "42457d764d79db026c9ad7176f0001fd"
+import os
+
+API_ID = int(os.environ.get("TELEGRAM_API_ID"))
+API_HASH = os.environ.get("TELEGRAM_API_HASH")
 
 SESSIONS_FILE = "app/data/sesiones.json"  # <-- Guardalo aquí
 

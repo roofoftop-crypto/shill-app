@@ -1,24 +1,13 @@
-from pyairtable import Table
 import os
-from dotenv import load_dotenv
-from pathlib import Path
+from pyairtable import Table
 
-# Cargar .env desde la raíz del proyecto
-env_path = Path(__file__).resolve().parent.parent / ".env"
-load_dotenv(dotenv_path=env_path)
-
-# ✅ Obtener variables desde .env (no hardcodearlas)
-API_KEY = os.getenv("AIRTABLE_API_KEY")
-BASE_ID = os.getenv("AIRTABLE_BASE_ID")
-TABLE_NAME = os.getenv("AIRTABLE_TABLE_NAME")
-
-print("API_KEY:", API_KEY)
-print("BASE_ID:", BASE_ID)
-print("TABLE_NAME:", TABLE_NAME)
+# Obtener variables desde entorno
+API_KEY = os.environ.get("AIRTABLE_API_KEY")
+BASE_ID = os.environ.get("AIRTABLE_BASE_ID")
+TABLE_NAME = os.environ.get("AIRTABLE_TABLE_NAME")
 
 # Crear instancia de la tabla
 table = Table(API_KEY, BASE_ID, TABLE_NAME)
-
 
 def obtener_proyectos():
     records = table.all()

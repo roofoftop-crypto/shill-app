@@ -1,23 +1,16 @@
 import asyncio
 import random
 import time
+import os
 from telethon.sync import TelegramClient
 from telethon.sessions import StringSession
+from telethon import functions, types
 from services.configuracion_shill import obtener_configuracion_shill
 from services.telegram_manager import cargar_cuentas_activas
-from dotenv import load_dotenv
-from pathlib import Path
-from telethon import functions, types
-import os
 
-
-# Cargar .env
-env_path = Path(__file__).resolve().parent.parent / ".env"
-load_dotenv(dotenv_path=env_path)
-
-API_ID = int(os.getenv("TELEGRAM_API_ID"))
-API_HASH = os.getenv("TELEGRAM_API_HASH")
-
+# Leer claves desde entorno (Render las inyecta)
+API_ID = int(os.environ.get("TELEGRAM_API_ID"))
+API_HASH = os.environ.get("TELEGRAM_API_HASH")
 
 def enviar_mensajes_simulados(texto, grupo_telegram):
     config = obtener_configuracion_shill()
@@ -96,7 +89,7 @@ def enviar_mensajes_simulados(texto, grupo_telegram):
             mensaje_anterior_id = sent_msg.id
             mensaje_anterior_texto = mensaje
 
-            # 🎉 Reacción automática usando otra cuenta
+            # 🎉 Reacción automática
             reaccionador = None
             for otra_alias in cuentas.keys():
                 if otra_alias != alias:

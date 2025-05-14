@@ -1,14 +1,8 @@
-from pyairtable import Table
 import os
-from dotenv import load_dotenv
-from pathlib import Path
+from pyairtable import Table
 
-# Cargar .env
-env_path = Path(__file__).resolve().parent.parent / ".env"
-load_dotenv(dotenv_path=env_path)
-
-AIRTABLE_API_KEY = os.getenv("AIRTABLE_API_KEY")
-AIRTABLE_BASE_ID = os.getenv("AIRTABLE_BASE_ID")
+AIRTABLE_API_KEY = os.environ.get("AIRTABLE_API_KEY")
+AIRTABLE_BASE_ID = os.environ.get("AIRTABLE_BASE_ID")
 
 table = Table(AIRTABLE_API_KEY, AIRTABLE_BASE_ID, "ConfiguracionShill")
 
@@ -19,7 +13,6 @@ def obtener_configuracion_shill():
 
     campos = registros[0]["fields"]
 
-    # Devolver como diccionario completo y tipado
     return {
         "delay_min": int(campos.get("delay_min", 1)),
         "delay_max": int(campos.get("delay_max", 3)),

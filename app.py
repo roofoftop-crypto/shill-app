@@ -1,3 +1,4 @@
+import os
 from flask import Flask, redirect, url_for, session
 from routes.auth_routes import auth_bp
 from routes.panel_routes import panel_bp
@@ -6,7 +7,7 @@ from routes.tweets_routes import tweets_bp
 from routes.metricas_routes import metricas_bp
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'
+app.secret_key = os.environ.get("SECRET_KEY", "fallback-secret")
 
 # Registrar todos los blueprints
 app.register_blueprint(auth_bp)
@@ -20,8 +21,6 @@ def index():
     if 'username' in session:
         return redirect(url_for('panel.dashboard'))
     return redirect(url_for('auth.login'))
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)

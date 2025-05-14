@@ -1,24 +1,23 @@
+import os
+import asyncio
+import random
+import time
+from pathlib import Path
 from pyairtable import Table
 from telethon.sync import TelegramClient
 from telethon.sessions import StringSession
-import os
-from dotenv import load_dotenv
-from pathlib import Path
-import asyncio
 
-# Cargar .env desde la raíz del proyecto
-env_path = Path(__file__).resolve().parent.parent / ".env"
-load_dotenv(dotenv_path=env_path)
+from services.configuracion_shill import obtener_configuracion_shill
+from services.telegram_manager import cargar_cuentas_activas
 
-# Variables del entorno
-API_ID = int(os.getenv("TELEGRAM_API_ID"))
-API_HASH = os.getenv("TELEGRAM_API_HASH")
-AIRTABLE_API_KEY = os.getenv("AIRTABLE_API_KEY")
-AIRTABLE_BASE_ID = os.getenv("AIRTABLE_BASE_ID")
+# Variables del entorno (Render las inyecta automáticamente)
+API_ID = int(os.environ.get("TELEGRAM_API_ID"))
+API_HASH = os.environ.get("TELEGRAM_API_HASH"))
+AIRTABLE_API_KEY = os.environ.get("AIRTABLE_API_KEY")
+AIRTABLE_BASE_ID = os.environ.get("AIRTABLE_BASE_ID")
 
 # Tabla de cuentas de Telegram en Airtable
 table_sessions = Table(AIRTABLE_API_KEY, AIRTABLE_BASE_ID, "Cuentas Telegram")
-
 
 def cargar_cuentas_activas():
     """Carga todas las cuentas activas desde Airtable."""
@@ -32,25 +31,6 @@ def cargar_cuentas_activas():
             cuentas[alias] = session_str
     return cuentas
 
-
-import asyncio
-import random
-import time
-from telethon.sync import TelegramClient
-from telethon.sessions import StringSession
-from services.configuracion_shill import obtener_configuracion_shill
-from services.telegram_manager import cargar_cuentas_activas
-from dotenv import load_dotenv
-from pathlib import Path
-import os
-
-# Cargar .env
-env_path = Path(__file__).resolve().parent.parent / ".env"
-load_dotenv(dotenv_path=env_path)
-
-API_ID = int(os.getenv("TELEGRAM_API_ID"))
-API_HASH = os.getenv("TELEGRAM_API_HASH")
-
 def verificar_sesiones(cuentas):
     """
     Recibe un dict de {alias: string_session} y devuelve {alias: True/False}.
@@ -63,13 +43,11 @@ def verificar_sesiones(cuentas):
         try:
             print(f"🔍 Verificando alias {alias}...")
 
-            # Validación rápida
             if not session_str or len(session_str) < 100:
                 print(f"⚠️ Sesión de {alias} es inválida o demasiado corta.")
                 estados[alias] = False
                 continue
 
-            # Manejo de event loop
             try:
                 asyncio.get_running_loop()
             except RuntimeError:
