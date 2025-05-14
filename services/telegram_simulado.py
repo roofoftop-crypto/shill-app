@@ -6,13 +6,14 @@ from telethon.sync import TelegramClient
 from telethon.sessions import StringSession
 from telethon import functions, types
 from services.configuracion_shill import obtener_configuracion_shill
-from services.telegram_manager import cargar_cuentas_activas
+
 
 # Leer claves desde entorno (Render las inyecta)
 API_ID = int(os.environ.get("TELEGRAM_API_ID"))
 API_HASH = os.environ.get("TELEGRAM_API_HASH")
 
 def enviar_mensajes_simulados(texto, grupo_telegram):
+    from services.telegram_manager import cargar_cuentas_activas
     config = obtener_configuracion_shill()
     delay_min = config["delay_min"]
     delay_max = config["delay_max"]

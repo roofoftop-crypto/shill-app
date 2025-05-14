@@ -27,7 +27,7 @@ def shill_home():
         return redirect(url_for('auth.login'))
 
     proyectos = obtener_proyectos()
-    return render_template("shill/index.html", proyectos=proyectos)
+    return render_template("Shill/index.html", proyectos=proyectos)
 
 
 @shill_bp.route('/<proyecto_alias>', methods=['GET', 'POST'])
@@ -139,7 +139,7 @@ def administrar_sesiones():
             flash("⚠️ Todos los campos son obligatorios", "warning")
 
     sesiones = table.all()
-    return render_template("admin/sesiones.html", sesiones=sesiones)
+    return render_template("admin/Sesiones.html", sesiones=sesiones)
 
 @shill_bp.route('/admin/eliminar_sesion/<session_id>', methods=['POST'])
 def eliminar_sesion(session_id):
