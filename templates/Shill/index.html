@@ -5,6 +5,7 @@
   <title>Proyectos Shill</title>
   <link rel="icon" href="data:,">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <style>
     @keyframes pan {
       0% { background-position: 0% 50%; }
@@ -29,10 +30,10 @@
       Seleccioná un proyecto para enviar <span class="text-purple-600">SHILL</span>
     </h1>
 
-    <!-- Grid de proyectos -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <!-- Grid de proyectos (DRAGGABLE) -->
+    <div id="tarjetas-contenedor" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       {% for proyecto in proyectos %}
-      <div class="relative bg-white rounded-xl border shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out p-6 group will-change-transform">
+      <div class="relative bg-white rounded-xl border shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out p-6 group will-change-transform cursor-move">
         <a href="/shill/{{ proyecto.alias }}" class="block">
           <div class="flex flex-col items-center">
             <img src="/static/logos/{{ proyecto.alias|lower }}.png"
@@ -75,5 +76,18 @@
       </a>
     </div>
   </div>
+
+  <!-- Activar Sortable -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const contenedor = document.getElementById("tarjetas-contenedor");
+      if (contenedor) {
+        Sortable.create(contenedor, {
+          animation: 150,
+          ghostClass: 'bg-yellow-100',
+        });
+      }
+    });
+  </script>
 </body>
 </html>
