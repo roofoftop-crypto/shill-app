@@ -107,19 +107,24 @@
     </form>
 
     <!-- Vista previa -->
+    <!-- Vista previa -->
     {% if preview %}
     <div class="mt-8 relative z-10 animate-fade-slide">
       <h2 class="text-lg font-bold text-gray-700 mb-4">💬 Vista previa de la conversación:</h2>
       <div class="flex flex-col gap-3">
         {% for sesion, mensaje in preview %}
-          <div class="chat-bubble {% if loop.index % 2 == 0 %}from-user self-start{% else %}from-other self-end{% endif %} shadow">
-            <p class="text-xs text-gray-500 mb-1">{{ sesion }}</p>
-            <p class="text-sm text-gray-800">{{ mensaje }}</p>
+         {% set is_num = sesion.replace('Session ', '').isdigit() %}
+          <div class="flex {% if is_num %}justify-start{% else %}justify-end{% endif %}">
+            <div class="chat-bubble shadow {% if is_num %}from-user{% else %}from-other{% endif %}">
+              <p class="text-xs text-gray-500 mb-1">{{ sesion }}</p>
+              <p class="text-sm text-gray-800">{{ mensaje }}</p>
+            </div>
           </div>
         {% endfor %}
       </div>
     </div>
     {% endif %}
+
 
   </div>
 
