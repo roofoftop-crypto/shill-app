@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Configuración del Envío Simulado</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes fade-slide-in {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-slide {
+      animation: fade-slide-in 0.5s ease-out both;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen flex items-center justify-center px-4">
+
+  <div class="w-full max-w-2xl bg-white rounded-xl shadow-xl p-8 animate-fade-slide">
+
+    <!-- Encabezado -->
+    <div class="flex items-center justify-center gap-2 text-indigo-600 text-2xl font-bold mb-6">
+      <span class="animate-spin">⚙️</span>
+      <h1>Configuración del Envío Simulado</h1>
+    </div>
+
+    <form method="POST" class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Delay mínimo (s)</label>
+          <input name="delay_min" value="{{ config.delay_min }}" type="number" class="w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Delay máximo (s)</label>
+          <input name="delay_max" value="{{ config.delay_max }}" type="number" class="w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Duración máxima (h)</label>
+          <input name="tiempo_max_conversacion" value="{{ config.tiempo_max_conversacion }}" type="number" class="w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Probabilidad de respuesta (%)</label>
+          <input name="probabilidad_respuesta" value="{{ config.probabilidad_respuesta }}" type="number" class="w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Probabilidad de reacción (%)</label>
+          <input name="probabilidad_reaccion" value="{{ config.probabilidad_reaccion }}" type="number" class="w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Lista de reacciones (emoji separados por coma)</label>
+          <input name="reacciones" value="{{ config.reacciones }}" type="text" class="w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Intervalo mínimo entre bloques (min)</label>
+          <input name="min_intervalo_bloque" value="{{ config.min_intervalo_bloque }}" type="number" class="w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Mensajes por bloque</label>
+          <input name="mensajes_por_bloque" value="{{ config.mensajes_por_bloque }}" type="number" class="w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+      </div>
+
+      <!-- Checkbox -->
+      <div class="flex items-center mt-2">
+        <input type="checkbox" name="usar_bloques" id="usar_bloques" {% if config.usar_bloques %}checked{% endif %} class="h-4 w-4 text-purple-600 border-gray-300 rounded">
+        <label for="usar_bloques" class="ml-2 block text-sm text-gray-700">Usar bloques de actividad</label>
+      </div>
+
+      <!-- Botón -->
+      <div class="flex justify-between items-center mt-6">
+        <a href="/panel" class="text-sm text-blue-600 hover:underline">⬅ Volver al panel</a>
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded flex items-center gap-2">
+          💾 Guardar configuración
+        </button>
+      </div>
+    </form>
+  </div>
+
+</body>
+</html>

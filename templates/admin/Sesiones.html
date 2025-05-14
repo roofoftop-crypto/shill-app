@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Administrar Cuentas de Telegram</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 py-8 px-4">
+  <div class="max-w-4xl mx-auto bg-white rounded-xl shadow p-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">🔐 Administrar cuentas de Telegram</h1>
+
+    <!-- Mensajes flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="mb-4 space-y-2">
+          {% for category, message in messages %}
+            <div class="px-4 py-2 rounded text-sm bg-blue-100 text-blue-800" style="white-space: pre-line;">
+              {{ message|safe }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Formulario para agregar nueva sesión -->
+    <form method="POST" class="space-y-4 mb-8">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <input type="text" name="alias" placeholder="Alias (A, B, C...)" required
+          class="border border-gray-300 rounded px-3 py-2 w-full" />
+        <input type="text" name="session" placeholder="String Session" required
+          class="border border-gray-300 rounded px-3 py-2 w-full" />
+        <label class="flex items-center gap-2">
+          <input type="checkbox" name="activa" class="accent-green-600" />
+          <span class="text-sm text-gray-700">Activa</span>
+        </label>
+      </div>
+      <div class="text-center">
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+          ➕ Agregar cuenta
+        </button>
+      </div>
+    </form>
+
+    <!-- Botón para verificar estado -->
+    <form method="POST" action="/shill/admin/verificar_sesiones" class="mb-6 text-center">
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm">
+        🔄 Verificar estado de sesiones
+      </button>
+    </form>
+
+    <!-- Tabla de sesiones -->
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">📋 Cuentas registradas</h2>
+    <div class="overflow-x-auto">
+      <table class="min-w-full border border-gray-300 text-sm text-gray-700">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="border px-4 py-2 text-left">Alias</th>
+            <th class="border px-4 py-2 text-left">Session (inicio)</th>
+            <th class="border px-4 py-2 text-center">Activa</th>
+            <th class="border px-4 py-2 text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in sesiones %}
+          <tr>
+            <td class="border px-4 py-2 font-medium">{{ s.fields.get('Alias', '') }}</td>
+            <td class="border px-4 py-2 text-xs">{{ s.fields.get('Session', '')[:20] }}...</td>
+            <td class="border px-4 py-2 text-center">
+              {% if s.fields.get('Activa') %}
+              ✅
+              {% else %}
+              ❌
+              {% endif %}
+            </td>
+            <td class="border px-4 py-2 text-center">
+              <form method="POST" action="/shill/admin/eliminar_sesion/{{ s.id }}" onsubmit="return confirm('¿Eliminar esta sesión?');">
+                <button type="submit" class="text-red-600 hover:underline text-sm">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="text-center mt-6">
+      <a href="/shill" class="text-blue-600 hover:underline">⬅ Volver al listado de proyectos</a>
+    </div>
+  </div>
+</body>
+</html>
