@@ -141,7 +141,17 @@ def administrar_sesiones():
             flash("⚠️ Todos los campos son obligatorios", "warning")
 
     sesiones = table.all()
+
+    # ✅ Ordenar por número extraído del alias
+    import re
+    def extraer_numero(alias):
+        match = re.search(r'\d+', alias)
+        return int(match.group()) if match else 0
+
+    sesiones.sort(key=lambda r: extraer_numero(r["fields"].get("Alias", "")))
+
     return render_template("admin/Sesiones.html", sesiones=sesiones)
+
 
 @shill_bp.route('/admin/eliminar_sesion/<session_id>', methods=['POST'])
 def eliminar_sesion(session_id):
