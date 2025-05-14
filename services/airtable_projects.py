@@ -10,7 +10,8 @@ TABLE_NAME = os.environ.get("AIRTABLE_TABLE_NAME")
 table = Table(API_KEY, BASE_ID, TABLE_NAME)
 
 def obtener_proyectos():
-    records = table.all()
+    # ✅ Ordenar por el campo 'orden'
+    records = table.all(sort=["orden"])
     return [
         {
             "id": r["id"],
@@ -22,10 +23,14 @@ def obtener_proyectos():
     ]
 
 def agregar_proyecto(nombre, alias, telegram):
+    # ✅ Obtener el mayor orden actual y sumarle 1
+    existing = table.all(sort=["orden"])
+    nuevo_orden = len(existing) + 1
     return table.create({
         "Nombre": nombre,
         "Alias": alias,
-        "Telegram": telegram
+        "Telegram": telegram,
+        "orden": nuevo_orden
     })
 
 def eliminar_proyecto(record_id):

@@ -232,3 +232,24 @@ def configurar_shill():
         campos = data  # actualizar vista
 
     return render_template("Shill/configuracion.html", config=campos)
+
+@shill_bp.route('/reordenar', methods=['POST'])
+def reordenar_proyectos():
+    from pyairtable import Table
+    import os
+    data = request.get_json()
+
+    if not isinstance(data, list):
+        return {"error": "Formato inválido"}, 400
+
+    AIRTABLE_API_KEY = os.getenv("AIRTABLE_API_KEY")
+    AIRTABLE_BASE_ID = os.getenv("AIRTABLE_BASE_ID")
+    table = Table(AIRTABLE_API_KEY, AIRTABLE_BASE_ID, "Proyectos")
+
+    for orden, id_proyecto in enumerate(data):
+        try:
+            table.update(id_proyecto, {"orden": orden + 1})
+        except Exception as e:
+            print(f"❌ Error actualizando {id_proyecto}: {e}")
+
+    return {"success": True}, 200
