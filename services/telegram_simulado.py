@@ -36,7 +36,10 @@ def enviar_mensajes_simulados(texto, grupo_telegram):
         if ":" not in linea:
             continue
         tag, contenido = linea.split(":", 1)
-        alias = tag.strip().replace("Session ", "")
+        alias = tag.strip()
+        if alias not in cuentas:
+            respuestas.append(f"❌ Alias '{alias}' no encontrado en Airtable.")
+            continue
         contenido = contenido.strip()
         mensajes.append((alias, contenido))
 
