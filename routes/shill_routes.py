@@ -67,7 +67,7 @@ def shill_proyecto(proyecto_alias):
     config = obtener_configuracion_shill()
 
     return render_template(
-        "shill/proyecto.html",
+        "Shill/proyecto.html",
         nombre=proyecto_en_uso["nombre"],
         estado=estado,
         preview=preview,
@@ -217,4 +217,4 @@ def configurar_shill():
         flash("✅ Configuración actualizada correctamente", "success")
         campos = data  # actualizar vista
 
-    return render_template("shill/configuracion.html", config=campos)
+    return render_template("Shill/configuracion.html", config=campos)
