@@ -140,3 +140,13 @@ def enviar_mensajes_simulados(texto, grupo_telegram):
 
     total_enviados = sum(1 for r in respuestas if r.startswith("✅"))
     return f"✅ Se enviaron {total_enviados} mensajes correctamente."
+
+# --- Envío en segundo plano con threading ---
+import threading
+
+def enviar_mensajes_en_hilo(texto, grupo_telegram):
+    """
+    Lanza el envío de mensajes en un hilo separado para evitar timeouts en Render.
+    """
+    hilo = threading.Thread(target=enviar_mensajes_simulados, args=(texto, grupo_telegram))
+    hilo.start()

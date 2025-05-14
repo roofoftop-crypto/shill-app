@@ -60,9 +60,11 @@ def shill_proyecto(proyecto_alias):
             if accion == "confirmar":
                 grupo = proyecto_en_uso.get("telegram")
                 if grupo:
-                    estado = enviar_mensajes_simulados(texto, grupo)
+                     from services.telegram_simulado import enviar_mensajes_en_hilo
+                     enviar_mensajes_en_hilo(texto, grupo)
+                     estado = "🕒 Envío iniciado en segundo plano."
                 else:
-                    estado = "❌ El proyecto no tiene grupo de Telegram configurado."
+                     estado = "❌ El proyecto no tiene grupo de Telegram configurado."
 
     config = obtener_configuracion_shill()
 
