@@ -77,17 +77,44 @@
     </div>
   </div>
 
-  <!-- Activar Sortable -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const contenedor = document.getElementById("tarjetas-contenedor");
-      if (contenedor) {
-        Sortable.create(contenedor, {
-          animation: 150,
-          ghostClass: 'bg-yellow-100',
-        });
-      }
-    });
-  </script>
+  <!-- Activar Sortable y guardar orden -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const contenedor = document.getElementById("tarjetas-contenedor");
+    if (contenedor) {
+      Sortable.create(contenedor, {
+        animation: 150,
+        ghostClass: 'bg-yellow-100',
+        onEnd: function () {
+          const tarjetas = Array.from(contenedor.querySelectorAll("form[action^='/shill/eliminar/']"));
+          const ids = tarjetas.map(form => {
+            const id = form.action.split("/").pop();
+            console.log("🔍 ID detectado:", id);
+            return id;
+          });
+
+          console.log("📦 Orden a enviar:", ids);
+
+          fetch("/shill/reordenar", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(ids)
+          })
+          .then(res => {
+            if (res.ok) {
+              console.log("✅ Orden actualizado en Airtable");
+            } else {
+              console.error("❌ Falló la actualización");
+            }
+          })
+          .catch(err => {
+            console.error("❌ Error al enviar orden:", err);
+          });
+        }
+      });
+    }
+  });
+</script>
+
 </body>
 </html>
