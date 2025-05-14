@@ -12,7 +12,7 @@ from services.telegram_manager import cargar_cuentas_activas
 
 # Variables del entorno (Render las inyecta automáticamente)
 API_ID = int(os.environ.get("TELEGRAM_API_ID"))
-API_HASH = os.environ.get("TELEGRAM_API_HASH"))
+API_HASH = os.environ.get("TELEGRAM_API_HASH")
 AIRTABLE_API_KEY = os.environ.get("AIRTABLE_API_KEY")
 AIRTABLE_BASE_ID = os.environ.get("AIRTABLE_BASE_ID")
 
