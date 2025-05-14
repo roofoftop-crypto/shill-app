@@ -57,18 +57,16 @@
     <span id="copiadoMsg" class="text-green-600 text-xs hidden">✅ Copiado</span>
   </div>
 
-  <textarea id="aliasList" rows="4" class="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm bg-gray-50 text-gray-800" readonly>
-{% for alias in aliases %}
+  <textarea id="aliasList" rows="4" class="w-full border border-gray-300 rounded px-3 py-2 font-mono text-sm bg-gray-50 text-gray-800 cursor-pointer select-all" readonly>{% for alias in aliases -%}
 {{ alias }}
-{% endfor %}
-  </textarea>
+{% endfor -%}</textarea>
 </div>
 
 <script>
 function copiarAliases() {
   const textarea = document.getElementById("aliasList");
   textarea.select();
-  textarea.setSelectionRange(0, 99999); // Para móviles
+  textarea.setSelectionRange(0, 99999); // Compatibilidad móvil
   document.execCommand("copy");
 
   const msg = document.getElementById("copiadoMsg");
@@ -76,6 +74,7 @@ function copiarAliases() {
   setTimeout(() => msg.classList.add("hidden"), 2000);
 }
 </script>
+
 
 
     <!-- Tabla de sesiones -->

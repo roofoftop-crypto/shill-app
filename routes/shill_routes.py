@@ -150,7 +150,9 @@ def administrar_sesiones():
 
     sesiones.sort(key=lambda r: extraer_numero(r["fields"].get("Alias", "")))
 
-    return render_template("admin/Sesiones.html", sesiones=sesiones)
+    aliases = [r["fields"].get("Alias", "") for r in sesiones]
+
+    return render_template("admin/Sesiones.html", sesiones=sesiones, aliases=aliases)
 
 
 @shill_bp.route('/admin/eliminar_sesion/<session_id>', methods=['POST'])
