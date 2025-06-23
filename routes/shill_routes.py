@@ -20,7 +20,7 @@ from services.airtable_projects import (
 shill_bp = Blueprint('shill', __name__, url_prefix='/shill')
 
 
-@shill_bp.route('/')
+<zx@shill_bp.route('/')
 def shill_home():
     if 'username' not in session:
         flash('Debes iniciar sesión para acceder.', 'warning')
