@@ -6,6 +6,17 @@ from routes.shill_routes import shill_bp
 from routes.tweets_routes import tweets_bp
 from routes.metricas_routes import metricas_bp
 
+# app.py
+
+raise SystemExit("🛑 App desactivada temporalmente por mantenimiento.")
+
+from flask import Flask
+
+app = Flask(__name__)
+
+# el resto de tu código...
+
+
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "fallback-secret")
 
