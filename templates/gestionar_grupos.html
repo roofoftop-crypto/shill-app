@@ -62,15 +62,15 @@
 
     const resultado = [];
 
-    for (const grupo of grupos) {
-      const res = await fetch("/agregar-a-grupo", {
+    for (const group of grupos) {
+      const res = await fetch("/panel/agregar-a-grupo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ group: grupo, sessions, delay })
+        body: JSON.stringify({ group, sessions, delay })
       });
 
       const data = await res.json();
-      resultado.push(`Resultado para ${grupo}:\n${JSON.stringify(data, null, 2)}\n`);
+      resultado.push(`Resultado para ${group}:\n${JSON.stringify(data, null, 2)}\n`);
     }
 
     document.getElementById("resultado").textContent = resultado.join("\n");
