@@ -10,8 +10,8 @@ from telethon.tl.functions.channels import JoinChannelRequest
 
 group_bp = Blueprint('group', __name__)
 
-API_ID = int(os.environ.get("API_ID"))
-API_HASH = os.environ.get("API_HASH")
+API_ID = int(os.environ.get("TELEGRAM_API_ID"))
+API_HASH = os.environ.get("TELEGRAM_API_HASH")
 
 async def unir_a_grupo(session_string, group_username):
     async with TelegramClient(StringSession(session_string), API_ID, API_HASH) as client:
