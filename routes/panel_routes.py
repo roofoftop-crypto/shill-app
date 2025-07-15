@@ -72,7 +72,7 @@ def agregar_a_grupo():
 
     for session_str in sessions:
         try:
-            client = TelegramClient(StringSession(session_str), os.environ.get("API_ID"), os.environ.get("API_HASH"))
+            client = TelegramClient(StringSession(session_str), os.environ.get("TELEGRAM_API_ID"), os.environ.get("TELEGRAM_API_HASH"))
             client.connect()
             if not client.is_user_authorized():
                 try:
