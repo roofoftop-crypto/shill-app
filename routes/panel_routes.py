@@ -46,7 +46,7 @@ def gestionar_grupos():
         for g in grupos_registros:
             fields = g.get("fields", {})
             nombre = fields.get("Nombre")
-            enlace = fields.get("Enlace")
+            enlace = fields.get("Telegram")
             if nombre and enlace:
                 grupos.append({"nombre": nombre, "enlace": enlace})
 
