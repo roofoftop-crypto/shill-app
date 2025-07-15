@@ -10,3 +10,10 @@ def dashboard():
     if 'username' not in session:
         return redirect(url_for('auth.login'))
     return render_template('panel.html')
+
+@panel_bp.route("/gestionar-grupos")
+def gestionar_grupos():
+    with open("perfiles_sessions_actualizado.txt", "r", encoding="utf-8") as f:
+        lineas = f.readlines()
+        cuentas = [line.strip().split("::") for line in lineas if "::" in line]
+    return render_template("gestionar_grupos.html", cuentas=cuentas)

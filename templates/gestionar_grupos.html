@@ -1,0 +1,49 @@
+<!-- templates/gestionar_grupos.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Unir cuentas a grupo</title>
+</head>
+<body>
+  <h2>Unir cuentas a un grupo público</h2>
+
+  <form id="form-unir">
+    <label>Grupo público (ej: @nombregrupo):</label><br />
+    <input type="text" name="grupo" id="grupo" required><br /><br />
+
+    <label>Seleccionar cuentas:</label><br />
+    <select multiple id="sessions">
+      {% for alias, session_str in cuentas %}
+        <option value="{{ session_str }}">{{ alias }}</option>
+      {% endfor %}
+    </select><br /><br />
+
+    <label>Delay entre uniones (segundos):</label><br />
+    <input type="number" id="delay" value="10" min="1" max="120"><br /><br />
+
+    <button type="submit">Unir al grupo</button>
+  </form>
+
+  <pre id="resultado"></pre>
+
+  <script>
+    document.getElementById("form-unir").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const grupo = document.getElementById("grupo").value;
+      const delay = document.getElementById("delay").value;
+      const options = document.getElementById("sessions").selectedOptions;
+      const sessions = Array.from(options).map(o => o.value);
+
+      const res = await fetch("/agregar-a-grupo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ group: grupo, sessions, delay })
+      });
+
+      const data = await res.json();
+      document.getElementById("resultado").textContent = JSON.stringify(data, null, 2);
+    });
+  </script>
+</body>
+</html>

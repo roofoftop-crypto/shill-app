@@ -5,6 +5,7 @@ from routes.panel_routes import panel_bp
 from routes.shill_routes import shill_bp
 from routes.tweets_routes import tweets_bp
 from routes.metricas_routes import metricas_bp
+from routes.group_routes import group_bp
 
 # app.py
 
@@ -17,6 +18,8 @@ app = Flask(__name__)
 # el resto de tu código...
 
 
+app.register_blueprint(group_bp)
+
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "fallback-secret")
 
@@ -26,6 +29,7 @@ app.register_blueprint(panel_bp)
 app.register_blueprint(shill_bp)
 app.register_blueprint(tweets_bp)
 app.register_blueprint(metricas_bp)
+app.register_blueprint(group_bp)
 
 @app.route('/')
 def index():
