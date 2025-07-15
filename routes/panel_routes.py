@@ -1,6 +1,11 @@
-from flask import Blueprint, render_template, session, redirect, url_for
+from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify
 from pyairtable import Table
 import os
+import asyncio
+from telethon.sync import TelegramClient
+from telethon.sessions import StringSession
+from telethon.errors import SessionPasswordNeededError
+import time
 
 panel_bp = Blueprint('panel', __name__, url_prefix='/panel')
 
@@ -14,7 +19,7 @@ def dashboard():
 def gestionar_grupos():
     api_key = os.environ.get("AIRTABLE_API_KEY")
     base_id = os.environ.get("AIRTABLE_BASE_ID")
-    table_name = "Cuentas Telegram"  # Corregido: esta es la tabla real
+    table_name = "Cuentas Telegram"
 
     print("→ DEBUG Airtable keys:")
     print("API KEY:", api_key)
@@ -24,11 +29,10 @@ def gestionar_grupos():
     tabla = Table(api_key, base_id, table_name)
 
     try:
-        registros = tabla.all(formula="Activa = 1")  # Filtra solo cuentas activas
+        registros = tabla.all(formula="Activa = 1")
         print(f"→ Cantidad de registros activos encontrados: {len(registros)}")
         cuentas = []
         for r in registros:
-            print("→ Registro:", r)
             fields = r.get("fields", {})
             alias = fields.get("Alias")
             session_str = fields.get("Session")
@@ -41,3 +45,39 @@ def gestionar_grupos():
     except Exception as e:
         print("⚠️ Error al consultar Airtable:", e)
         return render_template("gestionar_grupos.html", cuentas=[])
+
+@panel_bp.route("/agregar-a-grupo", methods=["POST"])
+def agregar_a_grupo():
+    data = request.get_json()
+    group = data.get("group")
+    sessions = data.get("sessions", [])
+    delay = int(data.get("delay", 10))
+
+    if not group or not sessions:
+        return jsonify({"status": "error", "message": "Faltan parámetros"}), 400
+
+    results = []
+
+    for session_str in sessions:
+        try:
+            client = TelegramClient(StringSession(session_str), os.environ.get("API_ID"), os.environ.get("API_HASH"))
+            client.connect()
+            if not client.is_user_authorized():
+                try:
+                    client.send_code_request(phone=os.environ.get("PHONE"))
+                    return jsonify({"status": "error", "message": "Sesión requiere verificación 2FA"})
+                except SessionPasswordNeededError:
+                    return jsonify({"status": "error", "message": "Sesión requiere contraseña 2FA"})
+
+            client(JoinChannelRequest(group))
+            results.append({"session": session_str[:10] + "...", "status": "joined"})
+            time.sleep(delay)
+        except Exception as e:
+            print("❌ Error con sesión:", session_str[:10], "-", e)
+            results.append({"session": session_str[:10] + "...", "status": f"error: {str(e)}"})
+
+        finally:
+            if 'client' in locals():
+                client.disconnect()
+
+    return jsonify({"status": "ok", "results": results})
