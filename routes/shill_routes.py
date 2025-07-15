@@ -1,5 +1,3 @@
-1 / 0  # fuerza un error fatal de división por cero
-
 # --- shill_routes.py ---
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 import os
