@@ -35,7 +35,7 @@
       const options = document.getElementById("sessions").selectedOptions;
       const sessions = Array.from(options).map(o => o.value);
 
-      const res = await fetch("/agregar-a-grupo", {
+      const res = await fetch("/panel/agregar-a-grupo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ group: grupo, sessions, delay })
