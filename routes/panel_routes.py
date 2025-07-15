@@ -11,9 +11,25 @@ def dashboard():
         return redirect(url_for('auth.login'))
     return render_template('panel.html')
 
+from pyairtable import Table
+import os
+
+
 @panel_bp.route("/gestionar-grupos")
 def gestionar_grupos():
-    with open("perfiles_sessions_actualizado.txt", "r", encoding="utf-8") as f:
-        lineas = f.readlines()
-        cuentas = [line.strip().split("::") for line in lineas if "::" in line]
+    api_key = os.environ.get("AIRTABLE_API_KEY")
+    base_id = os.environ.get("AIRTABLE_BASE_ID")
+    table_name = os.environ.get("AIRTABLE_TABLE_NAME")
+
+    tabla = Table(api_key, base_id, table_name)
+    registros = tabla.all()
+
+    cuentas = []
+    for r in registros:
+        fields = r.get("fields", {})
+        alias = fields.get("Alias")
+        session = fields.get("Session")
+        if alias and session:
+            cuentas.append((alias, session))
+
     return render_template("gestionar_grupos.html", cuentas=cuentas)
