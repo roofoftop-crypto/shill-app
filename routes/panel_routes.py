@@ -20,6 +20,7 @@ def gestionar_grupos():
     api_key = os.environ.get("AIRTABLE_API_KEY")
     base_id = os.environ.get("AIRTABLE_BASE_ID")
     table_name = "Cuentas Telegram"
+    table_grupos = "Grupos"
 
     print("→ DEBUG Airtable keys:")
     print("API KEY:", api_key)
@@ -27,6 +28,7 @@ def gestionar_grupos():
     print("TABLE NAME:", table_name)
 
     tabla = Table(api_key, base_id, table_name)
+    tabla_grupos = Table(api_key, base_id, table_grupos)
 
     try:
         registros = tabla.all(formula="Activa = 1")
@@ -39,12 +41,22 @@ def gestionar_grupos():
             if alias and session_str:
                 cuentas.append((alias, session_str))
 
+        grupos_registros = tabla_grupos.all()
+        grupos = []
+        for g in grupos_registros:
+            fields = g.get("fields", {})
+            nombre = fields.get("Nombre")
+            enlace = fields.get("Enlace")
+            if nombre and enlace:
+                grupos.append({"nombre": nombre, "enlace": enlace})
+
         print("→ Cuentas cargadas:", cuentas)
-        return render_template("gestionar_grupos.html", cuentas=cuentas)
+        print("→ Grupos cargados:", grupos)
+        return render_template("gestionar_grupos.html", cuentas=cuentas, grupos=grupos)
 
     except Exception as e:
         print("⚠️ Error al consultar Airtable:", e)
-        return render_template("gestionar_grupos.html", cuentas=[])
+        return render_template("gestionar_grupos.html", cuentas=[], grupos=[])
 
 @panel_bp.route("/agregar-a-grupo", methods=["POST"])
 def agregar_a_grupo():
