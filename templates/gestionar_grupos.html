@@ -51,7 +51,12 @@
         </div>
       </form>
 
-      <pre class="mt-4 bg-light p-2 border rounded" id="resultado" style="white-space: pre-wrap;"></pre>
+      <div class="mt-4">
+        <div id="loader" class="text-center text-muted mb-2" style="display: none;">
+          Procesando uniones... ⏳
+        </div>
+        <pre class="bg-light p-2 border rounded" id="resultado" style="white-space: pre-wrap;"></pre>
+      </div>
     </div>
   </div>
 </div>
@@ -69,7 +74,12 @@
       return;
     }
 
-    const resultado = [];
+    const loader = document.getElementById("loader");
+    const output = document.getElementById("resultado");
+    loader.style.display = "block";
+    output.textContent = "";
+
+    const resultadoFinal = [];
 
     for (const group of grupos) {
       const res = await fetch("/panel/agregar-a-grupo", {
@@ -79,10 +89,17 @@
       });
 
       const data = await res.json();
-      resultado.push(`Resultado para ${group}:\n${JSON.stringify(data, null, 2)}\n`);
+      const resultados = data.results || [];
+
+      resultadoFinal.push(`📢 Resultado para ${group}:\n`);
+      for (const r of resultados) {
+        resultadoFinal.push(`→ Cuenta: ${r.session} → ${r.status}`);
+      }
+      resultadoFinal.push("\n");
     }
 
-    document.getElementById("resultado").textContent = resultado.join("\n");
+    loader.style.display = "none";
+    output.textContent = resultadoFinal.join("\n");
   });
 </script>
 
