@@ -1,18 +1,14 @@
-# File: /routes/panel_routes.py
-
 from flask import Blueprint, render_template, session, redirect, url_for
+from pyairtable import Table
+import os
 
 panel_bp = Blueprint('panel', __name__, url_prefix='/panel')
 
 @panel_bp.route('/')
 def dashboard():
-    # Protege el acceso: si no hay sesion, redirige a login
     if 'username' not in session:
         return redirect(url_for('auth.login'))
     return render_template('panel.html')
-
-from pyairtable import Table
-import os
 
 
 @panel_bp.route("/gestionar-grupos")
@@ -21,15 +17,28 @@ def gestionar_grupos():
     base_id = os.environ.get("AIRTABLE_BASE_ID")
     table_name = os.environ.get("AIRTABLE_TABLE_NAME")
 
+    print("→ DEBUG Airtable keys:")
+    print("API KEY:", api_key)
+    print("BASE ID:", base_id)
+    print("TABLE NAME:", table_name)
+
     tabla = Table(api_key, base_id, table_name)
-    registros = tabla.all()
 
-    cuentas = []
-    for r in registros:
-        fields = r.get("fields", {})
-        alias = fields.get("Alias")
-        session = fields.get("Session")
-        if alias and session:
-            cuentas.append((alias, session))
+    try:
+        registros = tabla.all()
+        print(f"→ Cantidad de registros encontrados: {len(registros)}")
+        cuentas = []
+        for r in registros:
+            print("→ Registro:", r)  # Para ver qué trae
+            fields = r.get("fields", {})
+            alias = fields.get("Alias")
+            session_str = fields.get("Session")
+            if alias and session_str:
+                cuentas.append((alias, session_str))
 
-    return render_template("gestionar_grupos.html", cuentas=cuentas)
+        print("→ cuentas cargadas:", cuentas)
+        return render_template("gestionar_grupos.html", cuentas=cuentas)
+
+    except Exception as e:
+        print("⚠️ Error al consultar Airtable:", e)
+        return render_template("gestionar_grupos.html", cuentas=[])
