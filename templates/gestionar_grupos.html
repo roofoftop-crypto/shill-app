@@ -32,7 +32,7 @@
           <div class="border rounded p-2" style="max-height: 250px; overflow-y: auto;">
             {% for alias, session_str in cuentas %}
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="sessions" value="{{ session_str }}" id="session_{{ loop.index }}">
+                <input class="form-check-input" type="checkbox" name="sessions" value="{{ session_str }}" data-alias="{{ alias }}" id="session_{{ loop.index }}">
                 <label class="form-check-label" for="session_{{ loop.index }}">
                   {{ alias }}
                 </label>
@@ -66,10 +66,10 @@
     e.preventDefault();
 
     const grupos = Array.from(document.querySelectorAll('input[name="grupos"]:checked')).map(el => el.value);
-    const sessions = Array.from(document.querySelectorAll('input[name="sessions"]:checked')).map(el => el.value);
+    const sessionInputs = Array.from(document.querySelectorAll('input[name="sessions"]:checked'));
     const delay = parseInt(document.getElementById("delay").value);
 
-    if (!grupos.length || !sessions.length) {
+    if (!grupos.length || !sessionInputs.length) {
       alert("Seleccioná al menos un grupo y una cuenta.");
       return;
     }
@@ -78,6 +78,13 @@
     const output = document.getElementById("resultado");
     loader.style.display = "block";
     output.textContent = "";
+
+    // Crear mapa { session_str: alias }
+    const sessionMap = {};
+    const sessions = sessionInputs.map(el => {
+      sessionMap[el.value] = el.dataset.alias;
+      return el.value;
+    });
 
     const resultadoFinal = [];
 
@@ -93,7 +100,8 @@
 
       resultadoFinal.push(`📢 Resultado para ${group}:\n`);
       for (const r of resultados) {
-        resultadoFinal.push(`→ Cuenta: ${r.session} → ${r.status}`);
+        const alias = sessionMap[r.session] || "???";
+        resultadoFinal.push(`→ Cuenta: ${alias} → ${r.status}`);
       }
       resultadoFinal.push("\n");
     }
