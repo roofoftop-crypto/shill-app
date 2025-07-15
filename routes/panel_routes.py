@@ -10,12 +10,11 @@ def dashboard():
         return redirect(url_for('auth.login'))
     return render_template('panel.html')
 
-
 @panel_bp.route("/gestionar-grupos")
 def gestionar_grupos():
     api_key = os.environ.get("AIRTABLE_API_KEY")
     base_id = os.environ.get("AIRTABLE_BASE_ID")
-    table_name = os.environ.get("AIRTABLE_TABLE_NAME")
+    table_name = "Cuentas Telegram"  # Corregido: esta es la tabla real
 
     print("→ DEBUG Airtable keys:")
     print("API KEY:", api_key)
@@ -25,18 +24,18 @@ def gestionar_grupos():
     tabla = Table(api_key, base_id, table_name)
 
     try:
-        registros = tabla.all()
-        print(f"→ Cantidad de registros encontrados: {len(registros)}")
+        registros = tabla.all(formula="Activa = 1")  # Filtra solo cuentas activas
+        print(f"→ Cantidad de registros activos encontrados: {len(registros)}")
         cuentas = []
         for r in registros:
-            print("→ Registro:", r)  # Para ver qué trae
+            print("→ Registro:", r)
             fields = r.get("fields", {})
             alias = fields.get("Alias")
             session_str = fields.get("Session")
             if alias and session_str:
                 cuentas.append((alias, session_str))
 
-        print("→ cuentas cargadas:", cuentas)
+        print("→ Cuentas cargadas:", cuentas)
         return render_template("gestionar_grupos.html", cuentas=cuentas)
 
     except Exception as e:
