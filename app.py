@@ -8,7 +8,7 @@ from routes.metricas_routes import metricas_bp
 
 # app.py
 
-raise SystemExit("🛑 App desactivada temporalmente por mantenimiento.")
+
 
 from flask import Flask
 
