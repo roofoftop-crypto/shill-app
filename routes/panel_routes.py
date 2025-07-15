@@ -5,6 +5,7 @@ import asyncio
 from telethon.sync import TelegramClient
 from telethon.sessions import StringSession
 from telethon.errors import SessionPasswordNeededError
+from telethon.tl.functions.channels import JoinChannelRequest
 import time
 
 panel_bp = Blueprint('panel', __name__, url_prefix='/panel')
