@@ -20,7 +20,7 @@ def gestionar_grupos():
     api_key = os.environ.get("AIRTABLE_API_KEY")
     base_id = os.environ.get("AIRTABLE_BASE_ID")
     table_name = "Cuentas Telegram"
-    table_grupos = "Grupos"
+    table_grupos = "Proyectos"
 
     print("→ DEBUG Airtable keys:")
     print("API KEY:", api_key)
